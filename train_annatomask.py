@@ -2,7 +2,9 @@ import torch
 from torch.cuda.amp import GradScaler
 import math
 import sys
-import time
+
+from tqdm import tqdm
+
 import numpy as np
 import os 
 
@@ -139,7 +141,7 @@ def anatomask_training(
 
     scaler = GradScaler() if AMP else None
 
-    for i in range(n_epoch):
+    for i in tqdm(range(n_epoch)):
         model.train()
         per_loss = 0.0
         per_p_loss = 0.0
@@ -160,7 +162,7 @@ def anatomask_training(
         logger.log('ema_decay', model_ema.decay)
 
 
-        for batch_idx, batch in enumerate(train_data_loader):
+        for batch in tqdm(train_data_loader):
             input_data = batch.to(device)
 
             if AMP:
