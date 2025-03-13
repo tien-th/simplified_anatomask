@@ -74,7 +74,7 @@ class MedicalImageReportDataset(Dataset):
         self.samples = []
         for month_folder in self.month_folders:
             images_root = os.path.join(month_folder, 'images')
-            if not os.path.isdir(images_root) or not os.path.isdir(reports_root):
+            if not os.path.isdir(images_root):
                 continue
             for modality in allowed_modalities:
                 modality_img_folder = os.path.join(images_root, modality)

@@ -2,7 +2,7 @@ import torch
 from torch.cuda.amp import GradScaler
 import math
 import sys
-
+import time 
 from tqdm import tqdm
 
 import numpy as np
@@ -48,7 +48,7 @@ def generate_mask(loss_pred, gamma, epoch, total_epoch, guide = True):
     # unshuffle to get final mask
     mask = torch.gather(mask, dim=1, index=ids_restore)
 
-    return mask.view(B, 1, h, w, d)
+    return mask.view(B, 1, d, h, w)
 
 
 def generate_random_mask(input_size, mask_ratio, device='cuda'):
@@ -105,8 +105,8 @@ def forward_loss(inp, rec, active_b1ff):
     var = inp.var(dim=-1, keepdim=True)
     inp = (inp - mean) / (var + 1.e-6) ** .5  #
 
-    l2_loss = ((rec - inp) ** 2)  # (B, L, C) ==mean==> (B, L)
-    non_active = 1 - active_b1ff 
+    l2_loss = ((rec - inp) ** 2) 
+    non_active = active_b1ff.logical_not().int()
     l2_loss = l2_loss
     recon_loss = l2_loss.mul_(non_active).sum() / (
             non_active.sum() + 1e-8)  # loss only on masked (non-active) patches
@@ -197,7 +197,7 @@ def anatomask_training(
                 # Forward through teacher (EMA) model to get reconstruction loss
                 with torch.no_grad():
                     L_rec = forward_teacher_network(model_ema, masked_input, input_data)
-
+                
                 # Generate final mask based on reconstruction loss
                 M_final = generate_mask(L_rec, gamma, epoch = i, total_epoch=n_epoch)
                 # Mask input with final mask and train student network
@@ -230,8 +230,8 @@ def anatomask_training(
         scheduler.step()
         epoch_end_timestamps = time.time()
 
-        time = epoch_end_timestamps - epoch_start_timestamps
-        print_to_log_file(f'Epoch {i} took {time} seconds')
+        times = epoch_end_timestamps - epoch_start_timestamps
+        print_to_log_file(f'Epoch {i} took {times} seconds')
 
         avg_loss = per_loss / len(train_data_loader)
         epoch_loss.append(avg_loss)

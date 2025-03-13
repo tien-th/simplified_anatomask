@@ -8,10 +8,14 @@ from scheduler import LinearWarmupCosineAnnealingLR
 # Initialize models, optimizer, and scheduler
 def initialize_training(student_model, lr=0.001, warmup_epochs=20, n_epochs=100):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
+    
+    print('+' * 100 )
+    print(f"Using {device} device")
     # Create models
+    student_model = student_model.to(device)
     teacher_model = copy.deepcopy(student_model)  # Initialize teacher with student weights
-
+    teacher_model = teacher_model.to(device)
+    
     # Set up EMA model
     from ema import ModelEMA
     model_ema = ModelEMA(teacher_model)
@@ -27,11 +31,11 @@ def initialize_training(student_model, lr=0.001, warmup_epochs=20, n_epochs=100)
 def main():
     # Create dataloader with dummy data
     
-    root = ''
+    root = '/home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001'
     batch_size = 8
     n_epoch = 100
 
-    exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_size'
+    exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_size_test'
 
     ds = MedicalImageReportDataset(root=root, split='train')
     train_data_loader = DataLoader(ds, num_workers=4, batch_size=batch_size, shuffle=True)
@@ -51,7 +55,7 @@ def main():
     )
     # Initialize models and training components
 
-    model_ema, optimizer, scheduler, device = initialize_training(model)
+    model_ema, optimizer, scheduler, device = initialize_training(model, lr=0.001, warmup_epochs=20, n_epochs=n_epoch)
 
     from log import Logger
     logger = Logger(experiment_name=exp_name)
