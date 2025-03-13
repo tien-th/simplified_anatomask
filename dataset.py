@@ -35,8 +35,43 @@ def process_image(image: np.ndarray, fix_depth=140):
 
     return image_tensor
 
+import random
+from scipy.ndimage import rotate
+
+def augment_rotation(image: np.array): 
+    rotation_axis = random.choice([0,1,2])
+    rotation_angle = random.choice(range(-15, 16))
+
+    np_img = rotate(image, rotation_angle, axes=(rotation_axis, (rotation_axis + 1) % 3), reshape=False)
+
+    return np_img
+
+def load_with_augment(image_path: str):
+    image = np.load(image_path)
+
+    if random.random() < 0.5:
+        return image 
+    else:
+        organ = image_path.split('/')[-2]
+        num_of_remove_slices = random.choice(range(10,21))
+        if organ == 'chest':
+            num_of_remove_slices_2 = random.choice(range(0,21))
+            image = image[num_of_remove_slices:-num_of_remove_slices_2]
+        elif organ == 'abdomen_pelvis':
+            image = image[num_of_remove_slices:]
+        elif organ == 'head_neck':
+            image = image[:-num_of_remove_slices]
+        else:
+            raise ValueError(f"Invalid organ: {organ}")
+    
+    if random.random() < 0.5:
+        return image
+    else:
+        return augment_rotation(image)
+
+
 class MedicalImageReportDataset(Dataset):
-    def __init__(self, vision_ssl_paths, image_text_pairs_path, split='train', transform=None):
+    def __init__(self, vision_ssl_paths, image_text_pairs_path, split='train', augment=False, transform=None):
         """
         Args:
             vision_ssl_paths (str): List of Path to the vision ssl folder (e.g., "./DAC001").
@@ -50,6 +85,7 @@ class MedicalImageReportDataset(Dataset):
         self.vision_ssl_paths = vision_ssl_paths
         self.image_text_pairs_path = image_text_pairs_path
         self.split = split.lower()
+        self.augment = augment
         self.transform = transform
         
         # Determine which month folders to include based on the split.
@@ -72,8 +108,6 @@ class MedicalImageReportDataset(Dataset):
                 # List all image files ending with .npy
                 image_files = sorted([f for f in os.listdir(modality_img_folder) if f.endswith('.npy')])
                 for img_file in image_files:
-                    base_name = os.path.splitext(img_file)[0]
-                    rep_file = base_name + '.txt'
                     img_file_path = os.path.join(modality_img_folder, img_file)
                     if os.path.exists(img_file_path):
                         self.samples.append(img_file_path)
@@ -84,13 +118,12 @@ class MedicalImageReportDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.samples[idx]
         # Load the image data from a .npy file
-        image = np.load(img_path)
+        image = load_with_augment(img_path)
         # Optionally apply a transform (if provided) or convert to a torch tensor.
         if self.transform:
             image = self.transform(image)
         else:
             image = process_image(image)
         # Load the report text.
-        
         return image
 

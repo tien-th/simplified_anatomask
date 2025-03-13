@@ -96,7 +96,6 @@ def forward_teacher_network(teacher_model, masked_input, original_input):
         L_rec = (reconstruction - original_input) ** 2  # Mean squared error per voxel
     return L_rec
 
-
 def print_to_log_file(*args):
     print(*args)
 
@@ -267,5 +266,4 @@ def anatomask_training(
         torch.save(checkpoint, f'{res_dir}/model_checkpoint_epoch_{i}.pt')
 
     return model, model_ema, epoch_loss, epoch_ema_loss
-
 
