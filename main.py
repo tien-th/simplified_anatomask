@@ -30,14 +30,16 @@ def initialize_training(student_model, lr=0.001, warmup_epochs=20, n_epochs=100)
 
 def main():
     # Create dataloader with dummy data
+    vision_ssl_paths = ['/home/user01/aiotlab/thaind/PET-CT-2022/split_body']
+    image_text_pairs_paths = ['/home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001']
     
-    root = '/home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001'
+
     batch_size = 8
     n_epoch = 100
 
     exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_size_test'
 
-    ds = MedicalImageReportDataset(root=root, split='train')
+    ds = MedicalImageReportDataset(vision_ssl_paths=vision_ssl_paths, image_text_pairs_path=image_text_pairs_paths , split='train')
     train_data_loader = DataLoader(ds, num_workers=4, batch_size=batch_size, shuffle=True)
 
     # model 

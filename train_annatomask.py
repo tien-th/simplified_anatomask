@@ -243,7 +243,7 @@ def anatomask_training(
             ema_loss = alpha * epoch_ema_loss[-1] + (1 - alpha) * avg_loss
 
         epoch_ema_loss.append(ema_loss)
-
+        
         print('Epoch ', 'Train AVG Loss: ', avg_loss)
         logger.log('train_losses', avg_loss)
         print('Epoch ', 'Train EMA Loss: ', ema_loss)
@@ -253,6 +253,8 @@ def anatomask_training(
 
         print_to_log_file('train_loss', np.round(avg_loss, decimals=4))
         
+        logger.log_to_wandb()
+
         # Save checkpoint
         checkpoint = {
             'network_weights': model.state_dict(),

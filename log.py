@@ -9,7 +9,12 @@ class Logger:
         wandb.login(key = '9ab49432fdba1dc80b8e9b71d7faca7e8b324e3e')
         wandb.init(project='FMMed', name=experiment_name)
         self.experiment_name = experiment_name
+        self.logs_dict = {}
 
     def log(self, key, value):
-            wandb.log({key: value})
+            # wandb.log({key: value})
+        self.logs_dict[key] = value
 
+    def log_to_wandb(self):
+        wandb.log(self.logs_dict)
+        self.logs_dict = {}

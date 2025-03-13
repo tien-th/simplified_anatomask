@@ -3,6 +3,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 import torch.nn.functional as F
+from split_pet_data import split_pet_data
 
 def process_image(image: np.ndarray, fix_depth=140):
     """
@@ -35,37 +36,24 @@ def process_image(image: np.ndarray, fix_depth=140):
     return image_tensor
 
 class MedicalImageReportDataset(Dataset):
-    def __init__(self, root, split='train', transform=None):
+    def __init__(self, vision_ssl_paths, image_text_pairs_path, split='train', transform=None):
         """
         Args:
-            root (str): Path to the root folder (e.g., "./DAC001").
+            vision_ssl_paths (str): List of Path to the vision ssl folder (e.g., "./DAC001").
+            image_text_pairs_path (str): List of Path to the image-text pairs folder (e.g., "./DAC001_CTAC3.75mm_H_1001_PETWB3DAC001").
             split (str): One of 'train', 'val', or 'test'.
                 - train: use all month folders except THANG 10, THANG 11, THANG 12.
                 - val: use only THANG 10.
                 - test: use only THANG 11 and THANG 12.
             transform: Optional transform to be applied on a sample (e.g., conversion to torch tensor, normalization, etc.).
         """
-        self.root = root
+        self.vision_ssl_paths = vision_ssl_paths
+        self.image_text_pairs_path = image_text_pairs_path
         self.split = split.lower()
         self.transform = transform
         
         # Determine which month folders to include based on the split.
-        self.month_folders = []
-        for month in os.listdir(root):
-            month_path = os.path.join(root, month)
-            if not os.path.isdir(month_path):
-                continue
-            if self.split == 'train':
-                if month in ['THANG 10', 'THANG 11', 'THANG 12']:
-                    continue
-                else:
-                    self.month_folders.append(month_path)
-            elif self.split == 'val':
-                if month == 'THANG 10':
-                    self.month_folders.append(month_path)
-            elif self.split == 'test':
-                if month in ['THANG 11', 'THANG 12']:
-                    self.month_folders.append(month_path)
+        self.month_folders = split_pet_data(self.vision_ssl_paths, self.image_text_pairs_path, split=self.split)
         
         # Allowed modalities (exclude "whole_body")
         allowed_modalities = ['abdomen_pelvis', 'chest', 'head_neck']
@@ -105,3 +93,4 @@ class MedicalImageReportDataset(Dataset):
         # Load the report text.
         
         return image
+
