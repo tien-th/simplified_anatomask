@@ -55,8 +55,13 @@ def load_with_augment(image_path: str):
         organ = image_path.split('/')[-2]
         num_of_remove_slices = random.choice(range(10,21))
         if organ == 'chest':
-            num_of_remove_slices_2 = random.choice(range(0,21))
-            image = image[num_of_remove_slices:-num_of_remove_slices_2]
+            num_of_remove_slices_2 = random.choice(range(1,21))
+            image = image[num_of_remove_slices:]
+            image = image[:-num_of_remove_slices_2]
+            # if image.shape[0] == 0: 
+            #     with open('error.txt', 'a') as f:
+            #         f.write(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
+            #     print(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
         elif organ == 'abdomen_pelvis':
             image = image[num_of_remove_slices:]
         elif organ == 'head_neck':
@@ -119,11 +124,20 @@ class MedicalImageReportDataset(Dataset):
         img_path = self.samples[idx]
         # Load the image data from a .npy file
         image = load_with_augment(img_path)
+    
         # Optionally apply a transform (if provided) or convert to a torch tensor.
         if self.transform:
             image = self.transform(image)
         else:
-            image = process_image(image)
+            try: 
+                image = process_image(image)
+            except Exception as e:
+                # write to file 
+                with open('error.txt', 'a') as f:
+                    f.write(f"Error: {e} - {img_path}\n")
+                print(f"Error: {e} - {img_path}")
+                return None
+                
         # Load the report text.
         return image
 

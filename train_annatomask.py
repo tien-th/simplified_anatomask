@@ -162,6 +162,8 @@ def anatomask_training(
 
 
         for batch in tqdm(train_data_loader):
+            if batch is None:
+                continue
             input_data = batch.to(device)
 
             if AMP:

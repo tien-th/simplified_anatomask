@@ -3,67 +3,139 @@ Using cuda device
 
 Epoch 0
 
-Epoch 0 took 9245.050047159195 seconds
-Epoch  Train AVG Loss:  0.5392869021977341
-Epoch  Train EMA Loss:  0.5392869021977341
-Train Pixel Loss:  0.5392869021977341
-train_loss 0.5393
+Epoch 0 took 16326.242896795273 seconds
+Epoch  Train AVG Loss:  0.45744618207246707
+Epoch  Train EMA Loss:  0.45744618207246707
+Train Pixel Loss:  0.45744618207246707
+train_loss 0.4574
 
 Epoch 1
 
-Epoch 1 took 8510.518840312958 seconds
-Epoch  Train AVG Loss:  0.13824906524379882
-Epoch  Train EMA Loss:  0.4991831185023406
-Train Pixel Loss:  0.13824906524379882
-train_loss 0.1382
+Epoch 1 took 15820.863622665405 seconds
+Epoch  Train AVG Loss:  0.10179538360442034
+Epoch  Train EMA Loss:  0.42188110222566244
+Train Pixel Loss:  0.10179538360442034
+train_loss 0.1018
 
 Epoch 2
 
-Epoch 2 took 9500.285171031952 seconds
-Epoch  Train AVG Loss:  0.07183005818980259
-Epoch  Train EMA Loss:  0.4564478124710868
-Train Pixel Loss:  0.07183005818980259
-train_loss 0.0718
+Epoch 2 took 15840.087328910828 seconds
+Epoch  Train AVG Loss:  0.05555964076741236
+Epoch  Train EMA Loss:  0.38524895607983745
+Train Pixel Loss:  0.05555964076741236
+train_loss 0.0556
 
 Epoch 3
 
-Epoch 3 took 10282.537224531174 seconds
-Epoch  Train AVG Loss:  0.05999236589757469
-Epoch  Train EMA Loss:  0.4168022678137356
-Train Pixel Loss:  0.05999236589757469
-train_loss 0.06
+Epoch 3 took 16042.984116792679 seconds
+Epoch  Train AVG Loss:  0.04876685297388709
+Epoch  Train EMA Loss:  0.35160074576924244
+Train Pixel Loss:  0.04876685297388709
+train_loss 0.0488
 
 Epoch 4
 
-Epoch 4 took 11064.573466539383 seconds
-Epoch  Train AVG Loss:  0.053300566620594785
-Epoch  Train EMA Loss:  0.3804520976944215
-Train Pixel Loss:  0.053300566620594785
-train_loss 0.0533
+Epoch 4 took 15759.425745725632 seconds
+Epoch  Train AVG Loss:  0.04507922456886113
+Epoch  Train EMA Loss:  0.32094859364920436
+Train Pixel Loss:  0.04507922456886113
+train_loss 0.0451
 
 Epoch 5
 
-Epoch 5 took 10828.199491500854 seconds
-Epoch  Train AVG Loss:  0.04937488684687904
-Epoch  Train EMA Loss:  0.34734437660966727
-Train Pixel Loss:  0.04937488684687904
-train_loss 0.0494
+Epoch 5 took 15681.986865282059 seconds
+Epoch  Train AVG Loss:  0.04093679470657937
+Epoch  Train EMA Loss:  0.2929474137549419
+Train Pixel Loss:  0.04093679470657937
+train_loss 0.0409
 
 Epoch 6
 
-Epoch 6 took 10054.32649898529 seconds
-Epoch  Train AVG Loss:  0.046198322402632885
-Epoch  Train EMA Loss:  0.31722977118896384
-Train Pixel Loss:  0.046198322402632885
-train_loss 0.0462
+Epoch 6 took 16054.195637226105 seconds
+Epoch  Train AVG Loss:  0.03944613171533983
+Epoch  Train EMA Loss:  0.26759728555098167
+Train Pixel Loss:  0.03944613171533983
+train_loss 0.0394
 
 Epoch 7
 
-Epoch 7 took 11226.808553695679 seconds
-Epoch  Train AVG Loss:  0.04400452825720091
-Epoch  Train EMA Loss:  0.28990724689578756
-Train Pixel Loss:  0.04400452825720091
-train_loss 0.044
+Epoch 7 took 16304.506837844849 seconds
+Epoch  Train AVG Loss:  0.037623142517258366
+Epoch  Train EMA Loss:  0.24459987124760932
+Train Pixel Loss:  0.037623142517258366
+train_loss 0.0376
 
 Epoch 8
+
+Epoch 8 took 16379.114633321762 seconds
+Epoch  Train AVG Loss:  0.03749367742931453
+Epoch  Train EMA Loss:  0.22388925186577982
+Train Pixel Loss:  0.03749367742931453
+train_loss 0.0375
+
+Epoch 9
+
+Epoch 9 took 16115.505967140198 seconds
+Epoch  Train AVG Loss:  0.03677428295537145
+Epoch  Train EMA Loss:  0.20517775497473897
+Train Pixel Loss:  0.03677428295537145
+train_loss 0.0368
+
+Epoch 10
+
+Epoch 10 took 16527.475442886353 seconds
+Epoch  Train AVG Loss:  0.035680466292538245
+Epoch  Train EMA Loss:  0.18822802610651893
+Train Pixel Loss:  0.035680466292538245
+train_loss 0.0357
+
+Epoch 11
+
+Epoch 11 took 15900.662563323975 seconds
+Epoch  Train AVG Loss:  0.03498574947144939
+Epoch  Train EMA Loss:  0.17290379844301199
+Train Pixel Loss:  0.03498574947144939
+train_loss 0.035
+
+Epoch 12
+
+Epoch 12 took 16449.62510561943 seconds
+Epoch  Train AVG Loss:  0.03458894115508333
+Epoch  Train EMA Loss:  0.15907231271421912
+Train Pixel Loss:  0.03458894115508333
+train_loss 0.0346
+
+Epoch 13
+
+Epoch 13 took 15940.20847940445 seconds
+Epoch  Train AVG Loss:  0.03437758908360679
+Epoch  Train EMA Loss:  0.1466028403511579
+Train Pixel Loss:  0.03437758908360679
+train_loss 0.0344
+
+Epoch 14
+
+Epoch 14 took 16252.00110912323 seconds
+Epoch  Train AVG Loss:  0.03417075616787963
+Epoch  Train EMA Loss:  0.13535963193283007
+Train Pixel Loss:  0.03417075616787963
+train_loss 0.0342
+
+Epoch 15
+
+Epoch 15 took 15704.836817026138 seconds
+Epoch  Train AVG Loss:  0.03378910375749493
+Epoch  Train EMA Loss:  0.12520257911529656
+Train Pixel Loss:  0.03378910375749493
+train_loss 0.0338
+
+Epoch 16
+
+Epoch 16 took 16221.915086746216 seconds
+Epoch  Train AVG Loss:  0.032204206562976796
+Epoch  Train EMA Loss:  0.11590274186006459
+Train Pixel Loss:  0.032204206562976796
+train_loss 0.0322
+
+Epoch 17
 

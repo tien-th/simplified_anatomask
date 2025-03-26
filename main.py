@@ -37,9 +37,9 @@ def main():
     batch_size = 8
     n_epoch = 100
 
-    exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_size_test'
+    exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_aug'
 
-    ds = MedicalImageReportDataset(vision_ssl_paths=vision_ssl_paths, image_text_pairs_path=image_text_pairs_paths , split='train')
+    ds = MedicalImageReportDataset(vision_ssl_paths=vision_ssl_paths, image_text_pairs_path=image_text_pairs_paths, split='train', augment=True)
     train_data_loader = DataLoader(ds, num_workers=4, batch_size=batch_size, shuffle=True)
 
     # model 
@@ -55,6 +55,8 @@ def main():
         dim_head = 32,
         heads = 8
     )
+    
+    model.load_state_dict(torch.load('/home/user01/aiotlab/htien/pet-clip/ViT_ckpts/CTVit.39000.pt'), strict=False)
     # Initialize models and training components
 
     model_ema, optimizer, scheduler, device = initialize_training(model, lr=0.001, warmup_epochs=20, n_epochs=n_epoch)

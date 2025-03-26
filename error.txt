@@ -1,0 +1,5 @@
+Error: Input and output sizes should be greater than 0, but got input (D: 0, H: 256, W: 256) output (D: 140, H: 480, W: 480) - /home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001/THANG 2/images/chest/day_21_patient_82.npy
+Error: Input and output sizes should be greater than 0, but got input (D: 0, H: 256, W: 256) output (D: 140, H: 480, W: 480) - /home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001/THANG 9/images/chest/day_22_patient_1157.npy
+Error: Input and output sizes should be greater than 0, but got input (D: 0, H: 256, W: 256) output (D: 140, H: 480, W: 480) - /home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001/THANG 9/images/chest/day_14_patient_1073.npy
+    16_0_/home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001/THANG 6/images/chest/day_13_patient_721.npy
+Error: Input and output sizes should be greater than 0, but got input (D: 0, H: 256, W: 256) output (D: 140, H: 480, W: 480) - /home/user01/aiotlab/thaind/DAC001_CTAC3.75mm_H_1001_PETWB3DAC001/THANG 6/images/chest/day_13_patient_721.npy
