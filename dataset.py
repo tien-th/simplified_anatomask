@@ -5,6 +5,66 @@ from torch.utils.data import Dataset
 import torch.nn.functional as F
 from split_pet_data import split_pet_data
 
+from scipy.ndimage import rotate
+import random
+
+
+def add_gaussian_noise(image: np.array, mean=0, std=3276):
+    """
+    Add Gaussian noise to the image with given mean and standard deviation.
+    
+    Args:
+        image (np.array): The image to add noise to
+        mean (float): The mean of the Gaussian noise
+        std (float): The standard deviation of the Gaussian noise
+    
+    Returns:
+        np.array: The image with added Gaussian noise
+    """
+    noise = np.random.normal(mean, std, image.shape)
+    noisy_image = image + noise
+
+    return noisy_image
+
+
+def augment_rotation(image: np.array): 
+    rotation_axis = random.choice([0,1,2])
+    rotation_angle = random.choice(range(-15, 16))
+
+    np_img = rotate(image, rotation_angle, axes=(rotation_axis, (rotation_axis + 1) % 3), reshape=False)
+
+    return np_img
+
+
+def load_with_augment(image_path: str, augment: callable = None):
+    image = np.load(image_path)
+
+    if random.random() < 0.5:
+        return image 
+    else:
+        organ = image_path.split('/')[-2]
+        num_of_remove_slices = random.choice(range(10,21))
+        if organ == 'chest':
+            num_of_remove_slices_2 = random.choice(range(1,21))
+            image = image[num_of_remove_slices:]
+            image = image[:-num_of_remove_slices_2]
+            # if image.shape[0] == 0: 
+            #     with open('error.txt', 'a') as f:
+            #         f.write(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
+            #     print(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
+        elif organ == 'abdomen_pelvis':
+            image = image[num_of_remove_slices:]
+        elif organ == 'head_neck':
+            image = image[:-num_of_remove_slices]
+        else:
+            raise ValueError(f"Invalid organ: {organ}")
+    
+    if random.random() < 0.5 or augment is None:
+        return image
+    else:
+        return augment(image)
+
+
 def process_image(image: np.ndarray, fix_depth=140):
     """
     Process the image from D x H x W to C x H x W x D
@@ -35,48 +95,9 @@ def process_image(image: np.ndarray, fix_depth=140):
 
     return image_tensor
 
-import random
-from scipy.ndimage import rotate
-
-def augment_rotation(image: np.array): 
-    rotation_axis = random.choice([0,1,2])
-    rotation_angle = random.choice(range(-15, 16))
-
-    np_img = rotate(image, rotation_angle, axes=(rotation_axis, (rotation_axis + 1) % 3), reshape=False)
-
-    return np_img
-
-def load_with_augment(image_path: str):
-    image = np.load(image_path)
-
-    if random.random() < 0.5:
-        return image 
-    else:
-        organ = image_path.split('/')[-2]
-        num_of_remove_slices = random.choice(range(10,21))
-        if organ == 'chest':
-            num_of_remove_slices_2 = random.choice(range(1,21))
-            image = image[num_of_remove_slices:]
-            image = image[:-num_of_remove_slices_2]
-            # if image.shape[0] == 0: 
-            #     with open('error.txt', 'a') as f:
-            #         f.write(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
-            #     print(f"{num_of_remove_slices}_{num_of_remove_slices_2}_{image_path}\n")
-        elif organ == 'abdomen_pelvis':
-            image = image[num_of_remove_slices:]
-        elif organ == 'head_neck':
-            image = image[:-num_of_remove_slices]
-        else:
-            raise ValueError(f"Invalid organ: {organ}")
-    
-    if random.random() < 0.5:
-        return image
-    else:
-        return augment_rotation(image)
-
 
 class MedicalImageReportDataset(Dataset):
-    def __init__(self, vision_ssl_paths, image_text_pairs_path, split='train', augment=False, transform=None):
+    def __init__(self, vision_ssl_paths, image_text_pairs_path, split='train', augment: callable = None):
         """
         Args:
             vision_ssl_paths (str): List of Path to the vision ssl folder (e.g., "./DAC001").
@@ -91,7 +112,6 @@ class MedicalImageReportDataset(Dataset):
         self.image_text_pairs_path = image_text_pairs_path
         self.split = split.lower()
         self.augment = augment
-        self.transform = transform
         
         # Determine which month folders to include based on the split.
         self.month_folders = split_pet_data(self.vision_ssl_paths, self.image_text_pairs_path, split=self.split)
@@ -123,20 +143,21 @@ class MedicalImageReportDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.samples[idx]
         # Load the image data from a .npy file
-        image = load_with_augment(img_path)
+        if self.augment:
+            image = load_with_augment(img_path)
+        else:
+            image = np.load(img_path)
     
         # Optionally apply a transform (if provided) or convert to a torch tensor.
-        if self.transform:
-            image = self.transform(image)
-        else:
-            try: 
-                image = process_image(image)
-            except Exception as e:
-                # write to file 
-                with open('error.txt', 'a') as f:
-                    f.write(f"Error: {e} - {img_path}\n")
-                print(f"Error: {e} - {img_path}")
-                return None
+        
+        try: 
+            image = process_image(image)
+        except Exception as e:
+            # write to file 
+            with open('error.txt', 'a') as f:
+                f.write(f"Error: {e} - {img_path}\n")
+            print(f"Error: {e} - {img_path}")
+            return None
                 
         # Load the report text.
         return image

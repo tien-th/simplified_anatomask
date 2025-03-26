@@ -2,9 +2,10 @@ import copy
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
 import torch
-from dataset import MedicalImageReportDataset
+from dataset import MedicalImageReportDataset, load_with_augment, add_gaussian_noise, augment_rotation
 from torch.utils.data import DataLoader
 from scheduler import LinearWarmupCosineAnnealingLR
+
 # Initialize models, optimizer, and scheduler
 def initialize_training(student_model, lr=0.001, warmup_epochs=20, n_epochs=100):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -39,7 +40,7 @@ def main():
 
     exp_name = f'anatomask_{n_epoch}_epochs_{batch_size}_batch_aug'
 
-    ds = MedicalImageReportDataset(vision_ssl_paths=vision_ssl_paths, image_text_pairs_path=image_text_pairs_paths, split='train', augment=True)
+    ds = MedicalImageReportDataset(vision_ssl_paths=vision_ssl_paths, image_text_pairs_path=image_text_pairs_paths, split='train', augment=add_gaussian_noise)
     train_data_loader = DataLoader(ds, num_workers=4, batch_size=batch_size, shuffle=True)
 
     # model 
